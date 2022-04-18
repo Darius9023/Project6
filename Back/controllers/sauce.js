@@ -3,11 +3,16 @@ const fs = require('fs');
 
 exports.createSauce = (req, res, next) => {
     const sauceObject = JSON.parse(req.body.sauce);
-    const url = req.protocol + '://' + req.get('host');
+    const url = req.protocol + '://' + req.get('host'); // get path for ther server
+
     const sauce = new Sauce({
 
         ...sauceObject,
-        // name: sauceObject.name,
+        //  name: sauceObject.name,
+        //  description : sauceObject.description,
+        //  heat: sauceObject.description,
+
+
         imageUrl: url + '/images/' + req.file.filename,
         likes : 0,
         dislikes : 0,
@@ -128,21 +133,24 @@ exports.getAllSauce = (req, res, next) => {
 
 exports.likeSauce = async (req, res, next) => {
     try {
+        // I need to get the Souce from DB
         const foundSauce = await Sauce.findOne({
             _id: req.params.id
         });
-        const userId = req.body.userId;
+
+        const userId = req.body.userId; //1
         const like = req.body.like;
 
         // make sure usersLiked Array only contains one copy of userId or else not at all
         if (like === 1) {
-            if (!foundSauce.usersLiked.includes(userId)) {
-                foundSauce.usersLiked.push(userId);
-            }
+            if (!foundSauce.usersLiked.includes(userId)) { // check if user exsist in the arreay or not 
+                foundSauce.usersLiked.push(userId); //add user to array
+           }
         } else {
             if (foundSauce.usersLiked.includes(userId)) {
+                // remove user from array
                 const userIdIndex = foundSauce.usersLiked.indexOf(userId);
-                foundSauce.usersLiked.splice(userIdIndex);
+                foundSauce.usersLiked.splice(userIdIndex); 
             }
         }
         // set likes to the number of usersLiked
@@ -174,15 +182,3 @@ exports.likeSauce = async (req, res, next) => {
     }
 };
 
-//Syntax
-/**
- * modelName.function(param?).then(
- * // if success
- * 
- * res.status(StatusNumber).json(data)
- * 
- * ).catch(
- * // if error
- * 
- * )
- */
