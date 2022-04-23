@@ -8,11 +8,7 @@ exports.createSauce = (req, res, next) => {
     const sauce = new Sauce({
 
         ...sauceObject,
-        //  name: sauceObject.name,
-        //  description : sauceObject.description,
-        //  heat: sauceObject.description,
-
-
+        
         imageUrl: url + '/images/' + req.file.filename,
         likes : 0,
         dislikes : 0,
